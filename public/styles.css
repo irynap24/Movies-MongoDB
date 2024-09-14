@@ -1,40 +1,72 @@
+/* public/styles.css */
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  color: #333;
   background-color: #f4f4f4;
 }
 
 header {
-  background: #333;
-  color: #fff;
+  background-color: #333;
+  color: white;
   padding: 1rem;
   text-align: center;
 }
 
-main {
-  padding: 1rem;
+header h1 {
+  margin: 0;
 }
 
-#movies-section,
-#comments-section {
+main {
+  padding: 2rem;
+  text-align: center;
+}
+
+section {
   margin-bottom: 2rem;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-bottom: 1rem;
+.content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 1rem;
+  display: inline-block;
+  text-align: left;
 }
 
-h2 {
-  border-bottom: 2px solid #333;
-  padding-bottom: 0.5rem;
+.item {
+  margin-bottom: 1rem;
+}
+
+button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+@media (max-width: 600px) {
+  section {
+    padding: 1rem;
+  }
 }

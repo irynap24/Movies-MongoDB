@@ -1,51 +1,74 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Fetch and display movies
-    fetch('/movies')
-        .then(response => response.json())
-        .then(movies => {
-            const moviesDiv = document.getElementById('movies');
-            if (movies.length === 0) {
-                moviesDiv.innerHTML = '<p>No movies found.</p>';
-            } else {
-                movies.forEach(movie => {
-                    const movieElement = document.createElement('div');
-                    movieElement.className = 'movie';
-                    movieElement.innerHTML = `
-                        <h3>${movie.title}</h3>
-                        <p>${movie.plot}</p>
-                    `;
-                    moviesDiv.appendChild(movieElement);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching movies:', error);
-            const moviesDiv = document.getElementById('movies');
-            moviesDiv.innerHTML = '<p>Error loading movies.</p>';
-        });
+    const moviesList = document.getElementById('moviesList');
+    const commentsSection = document.getElementById('commentsSection');
+    const commentsList = document.getElementById('commentsList');
+    const viewCommentsButton = document.getElementById('viewCommentsButton');
+    const backToMoviesButton = document.getElementById('backToMoviesButton');
 
-    // Fetch and display comments
-    fetch('/comments')
-        .then(response => response.json())
-        .then(comments => {
-            const commentsDiv = document.getElementById('comments');
-            if (comments.length === 0) {
-                commentsDiv.innerHTML = '<p>No comments found.</p>';
-            } else {
-                comments.forEach(comment => {
-                    const commentElement = document.createElement('div');
-                    commentElement.className = 'comment';
-                    commentElement.innerHTML = `
-                        <strong>${comment.name}:</strong>
-                        <p>${comment.text}</p>
-                    `;
-                    commentsDiv.appendChild(commentElement);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching comments:', error);
-            const commentsDiv = document.getElementById('comments');
-            commentsDiv.innerHTML = '<p>Error loading comments.</p>';
+    let currentPage = 1;
+    const commentsPerPage = 10;
+
+    // Function to fetch and display movies
+    async function fetchMovies() {
+        try {
+            const response = await fetch('/movies');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const movies = await response.json();
+            displayMovies(movies);
+        } catch (error) {
+            console.error('Failed to fetch movies:', error);
+            moviesList.innerHTML = '<p>Error loading movies.</p>';
+        }
+    }
+
+    // Function to display movies
+    function displayMovies(movies) {
+        moviesList.innerHTML = '';
+        movies.forEach(movie => {
+            const movieElement = document.createElement('div');
+            movieElement.innerHTML = `
+                <h3>${movie.title}</h3>
+                <p>${movie.plot || 'No plot available'}</p>
+            `;
+            moviesList.appendChild(movieElement);
         });
+    }
+
+    // Function to fetch and display comments
+    async function fetchComments(page = 1) {
+        try {
+            const response = await fetch(`/comments?page=${page}&limit=${commentsPerPage}`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const comments = await response.json();
+            displayComments(comments);
+        } catch (error) {
+            console.error('Failed to fetch comments:', error);
+            commentsList.innerHTML = '<p>Error loading comments.</p>';
+        }
+    }
+
+    // Function to display comments
+    function displayComments(comments) {
+        commentsList.innerHTML = ''; // Clear existing comments
+        comments.forEach(comment => {
+            const commentElement = document.createElement('div');
+            commentElement.innerHTML = `<p>${comment.text}</p>`;
+            commentsList.appendChild(commentElement);
+        });
+    }
+
+    // Event listeners
+    viewCommentsButton.addEventListener('click', () => {
+        fetchComments(currentPage);
+        moviesList.style.display = 'none';
+        commentsSection.style.display = 'block';
+    });
+
+    backToMoviesButton.addEventListener('click', () => {
+        moviesList.style.display = 'block';
+        commentsSection.style.display = 'none';
+    });
+
+    // Initial fetch of movies
+    fetchMovies();
 });

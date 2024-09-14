@@ -9,7 +9,8 @@ try {
     conn = await client.connect();
     console.log('Connected to MongoDB successfully');
 } catch (error) {
-    console.log(error);
+    console.log('Failed to connect to MongoDB:', error);
 }
+
 let db = conn.db('sample_mflix');
 export default db;
