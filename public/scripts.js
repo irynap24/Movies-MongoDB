@@ -5,9 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewCommentsButton = document.getElementById('viewCommentsButton');
     const backToMoviesButton = document.getElementById('backToMoviesButton');
 
-    let currentPage = 1;
-    const commentsPerPage = 10;
-
     // Function to fetch and display movies
     async function fetchMovies() {
         try {
@@ -35,9 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to fetch and display comments
-    async function fetchComments(page = 1) {
+    async function fetchComments() {
         try {
-            const response = await fetch(`/comments?page=${page}&limit=${commentsPerPage}`);
+            const response = await fetch('/comments');
             if (!response.ok) throw new Error('Network response was not ok');
             const comments = await response.json();
             displayComments(comments);
@@ -59,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listeners
     viewCommentsButton.addEventListener('click', () => {
-        fetchComments(currentPage);
+        fetchComments();
         moviesList.style.display = 'none';
         commentsSection.style.display = 'block';
     });
