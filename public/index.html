@@ -12,9 +12,31 @@
     <h1>Movies</h1>
     <div id="moviesList"></div>
 
+    <!-- Pagination controls for movies -->
+    <div id="moviesPagination">
+        <button id="prevMoviesPage">Previous</button>
+        <span id="moviesPageInfo">Page 1</span>
+        <button id="nextMoviesPage">Next</button>
+    </div>
+
     <div id="commentsSection" style="display: none;">
         <h2>Comments</h2>
         <div id="commentsList"></div>
+
+        <!-- Pagination controls for comments -->
+        <div id="commentsPagination">
+            <button id="prevCommentsPage">Previous</button>
+            <span id="commentsPageInfo">Page 1</span>
+            <button id="nextCommentsPage">Next</button>
+        </div>
+
+        <!-- Comment Form for Add/Update -->
+        <form id="commentForm">
+            <textarea id="commentText" placeholder="Add a comment..." required></textarea>
+            <input type="hidden" id="commentId">
+            <button type="submit">Submit Comment</button>
+        </form>
+
         <button id="backToMoviesButton">Back to Movies</button>
     </div>
 

@@ -4,21 +4,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const commentsList = document.getElementById('commentsList');
     const viewCommentsButton = document.getElementById('viewCommentsButton');
     const backToMoviesButton = document.getElementById('backToMoviesButton');
+    const commentForm = document.getElementById('commentForm');
+    const commentText = document.getElementById('commentText');
+    const commentId = document.getElementById('commentId');
+    const prevMoviesPageButton = document.getElementById('prevMoviesPage');
+    const nextMoviesPageButton = document.getElementById('nextMoviesPage');
+    const moviesPageInfo = document.getElementById('moviesPageInfo');
+    const prevCommentsPageButton = document.getElementById('prevCommentsPage');
+    const nextCommentsPageButton = document.getElementById('nextCommentsPage');
+    const commentsPageInfo = document.getElementById('commentsPageInfo');
 
-    // Function to fetch and display movies
+    let moviesPage = 1;
+    let moviesTotalPages = 1;
+    let commentsPage = 1;
+    let commentsTotalPages = 1;
+
     async function fetchMovies() {
         try {
-            const response = await fetch('/movies');
+            const response = await fetch(`/movies?page=${moviesPage}`);
             if (!response.ok) throw new Error('Network response was not ok');
-            const movies = await response.json();
+            const { movies, totalPages } = await response.json();
+            moviesTotalPages = totalPages;
             displayMovies(movies);
+            updateMoviesPaginationControls();
         } catch (error) {
             console.error('Failed to fetch movies:', error);
             moviesList.innerHTML = '<p>Error loading movies.</p>';
         }
     }
 
-    // Function to display movies
     function displayMovies(movies) {
         moviesList.innerHTML = '';
         movies.forEach(movie => {
@@ -31,30 +45,79 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Function to fetch and display comments
+    function updateMoviesPaginationControls() {
+        prevMoviesPageButton.disabled = moviesPage <= 1;
+        nextMoviesPageButton.disabled = moviesPage >= moviesTotalPages;
+        moviesPageInfo.textContent = `Page ${moviesPage}`;
+    }
+
     async function fetchComments() {
         try {
-            const response = await fetch('/comments');
+            const response = await fetch(`/comments?page=${commentsPage}`);
             if (!response.ok) throw new Error('Network response was not ok');
-            const comments = await response.json();
+            const { comments, totalPages } = await response.json();
+            commentsTotalPages = totalPages;
             displayComments(comments);
+            updateCommentsPaginationControls();
         } catch (error) {
             console.error('Failed to fetch comments:', error);
             commentsList.innerHTML = '<p>Error loading comments.</p>';
         }
     }
 
-    // Function to display comments
     function displayComments(comments) {
-        commentsList.innerHTML = ''; // Clear existing comments
+        commentsList.innerHTML = '';
         comments.forEach(comment => {
             const commentElement = document.createElement('div');
-            commentElement.innerHTML = `<p>${comment.text}</p>`;
+            commentElement.innerHTML = `
+                <p>${comment.text}</p>
+                <button onclick="editComment('${comment._id}', '${comment.text}')">Edit</button>
+                <button onclick="deleteComment('${comment._id}')">Delete</button>
+            `;
             commentsList.appendChild(commentElement);
         });
     }
 
-    // Event listeners
+    function updateCommentsPaginationControls() {
+        prevCommentsPageButton.disabled = commentsPage <= 1;
+        nextCommentsPageButton.disabled = commentsPage >= commentsTotalPages;
+        commentsPageInfo.textContent = `Page ${commentsPage}`;
+    }
+
+    async function handleCommentSubmit(event) {
+        event.preventDefault();
+        const commentData = { text: commentText.value };
+
+        if (commentId.value) {
+            // Update existing comment
+            await fetch(`/comments/${commentId.value}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(commentData)
+            });
+        } else {
+            // Add new comment
+            await fetch('/comments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(commentData)
+            });
+        }
+
+        commentForm.reset();
+        fetchComments();
+    }
+
+    window.editComment = function (id, text) {
+        commentId.value = id;
+        commentText.value = text;
+    };
+
+    async function deleteComment(id) {
+        await fetch(`/comments/${id}`, { method: 'DELETE' });
+        fetchComments();
+    }
+
     viewCommentsButton.addEventListener('click', () => {
         fetchComments();
         moviesList.style.display = 'none';
@@ -66,6 +129,35 @@ document.addEventListener('DOMContentLoaded', () => {
         commentsSection.style.display = 'none';
     });
 
-    // Initial fetch of movies
+    commentForm.addEventListener('submit', handleCommentSubmit);
+
+    prevMoviesPageButton.addEventListener('click', () => {
+        if (moviesPage > 1) {
+            moviesPage--;
+            fetchMovies();
+        }
+    });
+
+    nextMoviesPageButton.addEventListener('click', () => {
+        if (moviesPage < moviesTotalPages) {
+            moviesPage++;
+            fetchMovies();
+        }
+    });
+
+    prevCommentsPageButton.addEventListener('click', () => {
+        if (commentsPage > 1) {
+            commentsPage--;
+            fetchComments();
+        }
+    });
+
+    nextCommentsPageButton.addEventListener('click', () => {
+        if (commentsPage < commentsTotalPages) {
+            commentsPage++;
+            fetchComments();
+        }
+    });
+
     fetchMovies();
 });

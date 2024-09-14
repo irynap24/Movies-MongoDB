@@ -5,13 +5,6 @@ body {
   background-color: #f4f4f4;
 }
 
-header {
-  background-color: #333;
-  color: #fff;
-  padding: 10px;
-  text-align: center;
-}
-
 main {
   padding: 20px;
 }
@@ -45,7 +38,7 @@ main {
 }
 
 button {
-  background-color: #007bff;
+  background-color: #822207;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -56,9 +49,73 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #b1544b;
 }
 
 #comments-section {
   display: none;
+}
+#moviesList div {
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1,
+h2 {
+  color: #333;
+}
+
+#moviesList,
+#commentsList {
+  margin: 20px 0;
+}
+
+button {
+  padding: 10px;
+  background-color: #6d3131;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+button:hover {
+  background-color: #6d3131;
+}
+
+form {
+  margin: 20px 0;
+}
+/* Basic styles for pagination controls */
+#commentsPagination,
+#moviesPagination {
+  margin: 20px 0;
+  text-align: center;
+}
+
+#commentsPagination button,
+#moviesPagination button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  border: 1px solid #ccc;
+  background-color: #6d3131;
+  cursor: pointer;
+}
+
+#commentsPagination button:disabled,
+#moviesPagination button:disabled {
+  background-color: #6d3131;
+  cursor: not-allowed;
+}
+
+#commentsPagination #commentsPageInfo,
+#moviesPagination #moviesPageInfo {
+  font-size: 16px;
+  font-weight: bold;
 }

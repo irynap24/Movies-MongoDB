@@ -14,3 +14,4 @@ try {
 
 let db = conn.db('sample_mflix');
 export default db;
+

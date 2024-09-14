@@ -12,32 +12,31 @@
     <header>
         <h1>Movies and Comments</h1>
         <nav>
+            <a href="/">Home</a>
             <a href="/movies">Movies</a>
-            <a href="/users">Users</a>
             <a href="/comments">Comments</a>
         </nav>
     </header>
-
     <main>
         <section id="movies">
             <h2>Movies</h2>
             <div class="content" id="moviesList">
                 <!-- Movie items will be injected here -->
             </div>
+            <div id="paginationControls"></div>
         </section>
 
-        <section id="comments">
+        <section id="comments" style="display: none;">
             <h2>Comments</h2>
             <div class="content" id="commentsList">
                 <!-- Comment items will be injected here -->
             </div>
+            <button id="backToMoviesButton">Back to Movies</button>
         </section>
     </main>
-
     <footer>
         <p>&copy; 2024 Movies and Comments</p>
     </footer>
-
     <script src="/scripts.js"></script>
 </body>
 
