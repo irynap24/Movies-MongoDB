@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const moviesList = document.getElementById('moviesList');
     const commentsSection = document.getElementById('commentsSection');
@@ -18,6 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let moviesTotalPages = 1;
     let commentsPage = 1;
     let commentsTotalPages = 1;
+    // Make sure this is at the top level of your scripts.js file
+    window.deleteComment = async function (id) {
+        try {
+            const response = await fetch(`/comments/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Failed to delete comment');
+            fetchComments(); // Refresh comments after deletion
+        } catch (error) {
+            console.error('Failed to delete comment:', error);
+        }
+    };
 
     async function fetchMovies() {
         try {
@@ -70,13 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
         comments.forEach(comment => {
             const commentElement = document.createElement('div');
             commentElement.innerHTML = `
-                <p>${comment.text}</p>
-                <button onclick="editComment('${comment._id}', '${comment.text}')">Edit</button>
-                <button onclick="deleteComment('${comment._id}')">Delete</button>
-            `;
+            <p>${comment.text}</p>
+            <button onclick="editComment('${comment._id}', '${comment.text}')">Edit</button>
+            <button onclick="deleteComment('${comment._id}')">Delete</button>
+        `;
             commentsList.appendChild(commentElement);
         });
     }
+
 
     function updateCommentsPaginationControls() {
         prevCommentsPageButton.disabled = commentsPage <= 1;
@@ -113,10 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
         commentText.value = text;
     };
 
+    // Function to delete a comment
     async function deleteComment(id) {
-        await fetch(`/comments/${id}`, { method: 'DELETE' });
-        fetchComments();
+        try {
+            const response = await fetch(`/comments/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Failed to delete comment');
+            fetchComments(); // Refresh comments after deletion
+        } catch (error) {
+            console.error('Failed to delete comment:', error);
+        }
     }
+
 
     viewCommentsButton.addEventListener('click', () => {
         fetchComments();

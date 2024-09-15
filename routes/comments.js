@@ -98,7 +98,7 @@ function validateComment(comment) {
     return errors;
 }
 
-
+// GET all comments with pagination
 // GET all comments with pagination
 router.get('/', async (req, res) => {
     try {
