@@ -19,7 +19,6 @@ function validateMovie(movie) {
 }
 
 // GET all movies with pagination
-// GET all movies with pagination
 router.get('/', async (req, res) => {
     try {
         const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit 10
